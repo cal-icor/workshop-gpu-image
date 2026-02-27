@@ -14,6 +14,7 @@ on:
 
 jobs:
   build-push-open-pr:
+    if: ${{ vars.HUB != '' && (vars.HUBS_REPOSITORY == '' || vars.HUBS_REPOSITORY == 'cal-icor/cal-icor-hubs') }}
     permissions:
       contents: write
       pull-requests: write
