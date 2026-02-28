@@ -3,8 +3,15 @@ channels:
   - conda-forge
 
 dependencies:
-  - llama-cpp-python
+  # 1. Build tools needed to compile llama-cpp-python
+  - cmake
+  - ninja
+  - gcc_linux-64
+  - gxx_linux-64
+  - cuda-toolkit=12.9
   - pip
+  
+  # 2. Your custom ML tools (No PyTorch here!)
   - pip:
       - transformers==4.46.3
       - openai>=1.0
