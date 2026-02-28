@@ -3,7 +3,15 @@ channels:
   - conda-forge
 
 dependencies:
+  # 1. Pin CUDA to match your PyTorch pip wheels (12.4)
+  - cuda-version=12.4
   - cuda-toolkit
+  
+  # 2. Add build tools needed for llama-cpp-python
+  - cmake
+  - ninja
+  
+  # 3. Conda C/C++ compilers
   - gcc_linux-64
   - gxx_linux-64
   - pip
