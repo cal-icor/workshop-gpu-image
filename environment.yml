@@ -3,9 +3,9 @@ channels:
   - conda-forge
 
 dependencies:
-  # 1. Pin CUDA to match your PyTorch pip wheels (12.4)
-  - cuda-version=12.4
-  - cuda-toolkit
+  # 1. Pin CUDA to match your PyTorch pip wheels (12.1)
+  - cuda-version=12.1
+  - cuda-toolkit=12.1
   
   # 2. Add build tools needed for llama-cpp-python
   - cmake
@@ -16,7 +16,7 @@ dependencies:
   - gxx_linux-64
   - pip
   - pip:
-      - --extra-index-url https://download.pytorch.org/whl/cu124
+      - --extra-index-url https://download.pytorch.org/whl/cu121
       - torch
       - torchvision
       - torchaudio
