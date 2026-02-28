@@ -18,10 +18,8 @@ COPY environment.yml /tmp/environment.yml
 RUN mamba env update -f /tmp/environment.yml --name notebook && \
     mamba clean --all -f -y
 
-# 4. Set environment variables to force pip to build with CUDA
-ENV CMAKE_ARGS="-DGGML_CUDA=on -DCUDAToolkit_ROOT=/srv/conda/envs/notebook"
-ENV FORCE_CMAKE=1
 
 # 5. Compile llama-cpp-python from source
 # CRITICAL FIX: Using 'mamba run' to ensure the environment is activated during the build!
-RUN mamba run -n notebook python -m pip install -v llama-cpp-python --no-cache-dir
+RUN mamba run -n notebook env CMAKE_ARGS="-DGGML_CUDA=on -DCUDAToolkit_ROOT=/srv/conda/envs/notebook" FORCE_CMAKE=1 \
+    python -m pip install -v llama-cpp-python --no-cache-dir
