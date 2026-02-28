@@ -3,7 +3,9 @@ channels:
   - conda-forge
 
 dependencies:
-  - llama-cpp-python
+  - cuda-toolkit
+  - gcc_linux-64
+  - gxx_linux-64
   - pip
   - pip:
       - transformers==4.46.3
