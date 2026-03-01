@@ -1,5 +1,5 @@
 ARG PANGEO_BASE_IMAGE_TAG=2026.01.30
-FROM pangeo/pytorch-notebook:${PANGEO_BASE_IMAGE_TAG}
+FROM pangeo/base-notebook:${PANGEO_BASE_IMAGE_TAG}
 
 # 1. Switch to root to install system-level C/C++ compilers
 # (Keeping this as a reliable fallback for basic system libraries)

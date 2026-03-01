@@ -17,9 +17,9 @@ dependencies:
   - pip
   - pip:
       - --extra-index-url https://download.pytorch.org/whl/cu121
-      - torch
-      - torchvision
-      - torchaudio
+      - torch==2.6.0+cu121
+      - torchvision==0.21.0+cu121
+      - torchaudio==2.6.0+cu121
       - transformers==4.46.3
       - openai>=1.0
       - anthropic>=0.8
@@ -29,4 +29,4 @@ dependencies:
       - otter-grader==6.1.6
       - huggingface_hub
       - docutils<0.20
-# Force cache rebuild: 1
+# Force cache rebuild: 2
