@@ -8,6 +8,7 @@ dependencies:
   - ninja
   - gcc_linux-64
   - gxx_linux-64
+  - cuda-toolkit
   - pip
   
   # 2. Your custom ML tools (No PyTorch here!)
