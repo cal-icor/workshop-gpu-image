@@ -13,6 +13,7 @@ dependencies:
   
   # 2. Your custom ML tools (No PyTorch here!)
   - pip:
+      - nbgitpuller==1.3.0b1
       - transformers==4.46.3
       - openai>=1.0
       - anthropic>=0.8
