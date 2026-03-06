@@ -28,3 +28,4 @@ dependencies:
       - chromadb 
       - langchain-text-splitters 
       - langchain-community
+      - datasets 
