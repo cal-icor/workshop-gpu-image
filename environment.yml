@@ -29,3 +29,5 @@ dependencies:
       - langchain-text-splitters 
       - langchain-community
       - datasets 
+      - langchain-huggingface 
+      - langchain-chroma
