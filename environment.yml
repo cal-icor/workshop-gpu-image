@@ -31,5 +31,5 @@ dependencies:
       - langchain-huggingface 
       - langchain-chroma
       # - datasets 
-      # - gpt4all
+      - gpt4all
       - gguf
