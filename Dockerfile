@@ -18,6 +18,13 @@ COPY environment.yml /tmp/environment.yml
 RUN mamba env update -f /tmp/environment.yml --name notebook && \
     mamba clean --all -f -y
 
+# Re-pin CUDA torch after env update, since pip dependency resolution
+# can silently downgrade to the CPU build from PyPI.
+RUN mamba run -n notebook pip install --upgrade --force-reinstall \
+    torch==2.10.0 torchvision==0.25.0 \
+    --index-url https://download.pytorch.org/whl/cu129 \
+    --no-deps
+
 
 # 5. Compile llama-cpp-python from source
 # CRITICAL FIX: Using 'mamba run' to ensure the environment is activated during the build!

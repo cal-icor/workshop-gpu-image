@@ -31,3 +31,4 @@ dependencies:
       # - datasets 
       - gpt4all
       - gguf
+      - megadetector
