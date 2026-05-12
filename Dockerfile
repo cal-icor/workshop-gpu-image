@@ -23,11 +23,6 @@ RUN mamba run -n notebook pip install --force-reinstall \
     torch==2.10.0+cu129 torchvision==0.25.0+cu129 \
     --index-url https://download.pytorch.org/whl/cu129
 
-# Restore CUDA torch if pip overwrote it with the CPU build during env update.
-# Uses mamba (not pip) so conda manages the CUDA library dependencies correctly.
-RUN mamba install -n notebook pytorch==2.10.0 torchvision==0.25.0 -c conda-forge --no-update-deps -y && \
-    mamba clean --all -f -y
-
 
 # 5. Compile llama-cpp-python from source
 # CRITICAL FIX: Using 'mamba run' to ensure the environment is activated during the build!
