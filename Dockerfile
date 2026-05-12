@@ -18,12 +18,15 @@ COPY environment.yml /tmp/environment.yml
 RUN mamba env update -f /tmp/environment.yml --name notebook && \
     mamba clean --all -f -y
 
-# Re-pin CUDA torch after env update, since pip dependency resolution
-# can silently downgrade to the CPU build from PyPI.
-RUN mamba run -n notebook pip install --upgrade --force-reinstall \
-    torch==2.10.0 torchvision==0.25.0 \
-    --index-url https://download.pytorch.org/whl/cu129 \
-    --no-deps
+# Ensure CUDA torch is intact after pip dependency resolution.
+RUN mamba run -n notebook pip install --force-reinstall \
+    torch==2.10.0+cu129 torchvision==0.25.0+cu129 \
+    --index-url https://download.pytorch.org/whl/cu129
+
+# Restore CUDA torch if pip overwrote it with the CPU build during env update.
+# Uses mamba (not pip) so conda manages the CUDA library dependencies correctly.
+RUN mamba install -n notebook pytorch==2.10.0 torchvision==0.25.0 -c conda-forge --no-update-deps -y && \
+    mamba clean --all -f -y
 
 
 # 5. Compile llama-cpp-python from source
