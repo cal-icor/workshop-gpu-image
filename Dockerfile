@@ -26,5 +26,5 @@ RUN mamba run -n notebook pip install --force-reinstall \
 
 # 5. Compile llama-cpp-python from source
 # CRITICAL FIX: Using 'mamba run' to ensure the environment is activated during the build!
-RUN mamba run -n notebook env CMAKE_ARGS="-DGGML_CUDA=on -DCUDAToolkit_ROOT=/srv/conda/envs/notebook" FORCE_CMAKE=1 \
+RUN mamba run -n notebook env CMAKE_ARGS="-DGGML_CUDA=on -DCUDAToolkit_ROOT=/srv/conda/envs/notebook -DCMAKE_CUDA_ARCHITECTURES=75" FORCE_CMAKE=1 \
     python -m pip install -v llama-cpp-python --no-cache-dir

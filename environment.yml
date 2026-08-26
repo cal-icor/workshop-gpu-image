@@ -28,7 +28,8 @@ dependencies:
       - langchain-community
       - langchain-huggingface 
       - langchain-chroma
-      # - datasets 
+      - datasets==5.0.1
+      - diffusers==0.39.0
       - gpt4all
       - gguf
       - megadetector
