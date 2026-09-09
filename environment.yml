@@ -33,3 +33,11 @@ dependencies:
       - gpt4all
       - gguf
       - megadetector
+      # Resolved 2026-09-09 against the pins above: llama-index 0.14.24 keeps
+      # transformers at 4.46.3, sentence-transformers at 3.4.1 and torch at
+      # 2.10.0, and shares pydantic 2.13.5 cleanly with chromadb + langchain.
+      # Pinned because the HF integrations declare wide ranges
+      # (transformers>=4.37,<6) and would otherwise drift on rebuild.
+      - llama-index==0.14.24
+      - llama-index-llms-huggingface==0.8.0
+      - llama-index-embeddings-huggingface==0.8.0
