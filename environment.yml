@@ -41,3 +41,9 @@ dependencies:
       - llama-index==0.14.24
       - llama-index-llms-huggingface==0.8.0
       - llama-index-embeddings-huggingface==0.8.0
+      # PDF text extraction. Deliberately NOT llama-index-readers-file,
+      # which caps pandas<3 and would downgrade pandas 3.0.6 -> 2.3.3 for
+      # every GPU hub. pypdf is pure Python with no runtime deps, so it
+      # adds nothing else; extract text with PdfReader and hand it to
+      # llama_index.core.Document instead of SimpleDirectoryReader.
+      - pypdf==6.19.0
