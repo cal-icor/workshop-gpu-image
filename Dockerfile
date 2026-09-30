@@ -28,3 +28,8 @@ RUN mamba run -n notebook pip install --force-reinstall \
 # CRITICAL FIX: Using 'mamba run' to ensure the environment is activated during the build!
 RUN mamba run -n notebook env CMAKE_ARGS="-DGGML_CUDA=on -DCUDAToolkit_ROOT=/srv/conda/envs/notebook -DCMAKE_CUDA_ARCHITECTURES=75" FORCE_CMAKE=1 \
     python -m pip install -v llama-cpp-python --no-cache-dir
+
+# 6. llama-index integration for the CUDA llama-cpp-python above. --no-deps so
+# pip cannot swap in a CPU build of llama-cpp-python.
+RUN mamba run -n notebook python -m pip install --no-cache-dir --no-deps \
+    llama-index-llms-llama-cpp==0.7.0
