@@ -6,6 +6,7 @@ FROM pangeo/pytorch-notebook:${PANGEO_BASE_IMAGE_TAG}
 USER root
 RUN apt-get update && \
     apt-get install -y build-essential && \
+    apt-get install -y --only-upgrade ca-certificates && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -16,6 +17,7 @@ USER ${NB_USER:-jovyan}
 COPY environment.yml /tmp/environment.yml
 
 RUN mamba env update -f /tmp/environment.yml --name notebook && \
+    mamba install -y -n notebook "ca-certificates>=2026.10.19" "certifi>=2026.10.19" && \
     mamba clean --all -f -y
 
 # Ensure CUDA torch is intact after pip dependency resolution.
