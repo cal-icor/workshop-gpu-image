@@ -5,7 +5,7 @@ FROM pangeo/pytorch-notebook:${PANGEO_BASE_IMAGE_TAG}
 # (Keeping this as a reliable fallback for basic system libraries)
 USER root
 RUN apt-get update && \
-    apt-get install -y build-essential && \
+    apt-get install -y build-essential libsm6 libice6 libx11-6 libxext6 && \
     apt-get install -y --only-upgrade ca-certificates libbrotli1 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -36,3 +36,8 @@ RUN mamba run -n notebook env CMAKE_ARGS="-DGGML_CUDA=on -DCUDAToolkit_ROOT=/srv
 # pip cannot swap in a CPU build of llama-cpp-python.
 RUN mamba run -n notebook python -m pip install --no-cache-dir --no-deps \
     llama-index-llms-llama-cpp==0.7.0
+
+# 7. GPU COLMAP (feature extraction + matching on CUDA). --no-deps so pip
+# cannot touch the cu129 torch stack; cudart/curand already come with it.
+RUN mamba run -n notebook python -m pip install --no-cache-dir --no-deps \
+    pycolmap-cuda12==4.2.1
