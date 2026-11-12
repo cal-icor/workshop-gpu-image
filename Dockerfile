@@ -27,7 +27,8 @@ RUN mamba run -n notebook pip install \
 # 4. Copy and update the environment
 COPY environment.yml /tmp/environment.yml
 
-RUN CONDA_OVERRIDE_CUDA=12.9 mamba env update -f /tmp/environment.yml --name notebook && \
+RUN export CONDA_OVERRIDE_CUDA=12.9 && \
+    mamba env update -f /tmp/environment.yml --name notebook && \
     mamba install -y -n notebook "ca-certificates>=2026.10.19" "certifi>=2026.10.19" "brotli-python>=1.2.1" && \
     mamba install -y -n base "ca-certificates>=2026.10.19" "certifi>=2026.10.19" "brotli-python>=1.2.1" && \
     mamba clean --all -f -y
