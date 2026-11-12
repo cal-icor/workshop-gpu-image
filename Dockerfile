@@ -1,5 +1,10 @@
 ARG PANGEO_BASE_IMAGE_TAG=2026.01.30
-FROM pangeo/pytorch-notebook:${PANGEO_BASE_IMAGE_TAG}
+FROM pangeo/pangeo-notebook:${PANGEO_BASE_IMAGE_TAG}
+
+# Same as pangeo/pytorch-notebook: lets the GKE-mounted NVIDIA driver be found.
+ENV PATH=${PATH}:/usr/local/nvidia/bin
+ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/nvidia/lib64
+ENV PIP_NO_CACHE_DIR=1
 
 # 1. Switch to root to install system-level C/C++ compilers
 # (Keeping this as a reliable fallback for basic system libraries)
@@ -13,7 +18,13 @@ RUN apt-get update && \
 # 2. Switch back to the default Pangeo user (jovyan)
 USER ${NB_USER:-jovyan}
 
-# 3. Copy and update the environment
+# 3. CUDA torch first, so it is the only torch in the image and every pip
+# package in environment.yml resolves against it.
+RUN mamba run -n notebook pip install \
+    torch==2.10.0+cu129 torchvision==0.25.0+cu129 \
+    --index-url https://download.pytorch.org/whl/cu129
+
+# 4. Copy and update the environment
 COPY environment.yml /tmp/environment.yml
 
 RUN mamba env update -f /tmp/environment.yml --name notebook && \
@@ -21,11 +32,10 @@ RUN mamba env update -f /tmp/environment.yml --name notebook && \
     mamba install -y -n base "ca-certificates>=2026.10.19" "certifi>=2026.10.19" "brotli-python>=1.2.1" && \
     mamba clean --all -f -y
 
-# Ensure CUDA torch is intact after pip dependency resolution.
-RUN mamba run -n notebook pip install --force-reinstall \
-    torch==2.10.0+cu129 torchvision==0.25.0+cu129 \
-    --index-url https://download.pytorch.org/whl/cu129
-
+# Fail the build if pip dependency resolution replaced the CUDA torch.
+RUN mamba run -n notebook python -c "import torch, torchvision; \
+assert torch.__version__ == '2.10.0+cu129', torch.__version__; \
+assert torchvision.__version__ == '0.25.0+cu129', torchvision.__version__"
 
 # 5. Compile llama-cpp-python from source
 # CRITICAL FIX: Using 'mamba run' to ensure the environment is activated during the build!
