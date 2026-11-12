@@ -38,6 +38,13 @@ RUN mamba run -n notebook python -c "import torch, torchvision; \
 assert torch.__version__ == '2.10.0+cu129', torch.__version__; \
 assert torchvision.__version__ == '0.25.0+cu129', torchvision.__version__"
 
+# GPU extras pangeo/pytorch-notebook used to provide, pinned to its versions.
+RUN mamba run -n notebook python -m pip install --no-cache-dir \
+    gpytorch==1.15.1 linear-operator==0.6 \
+    torchgeo==0.8.1 lightning==2.6.0 kornia==0.8.2 timm==1.0.24 \
+    segmentation-models-pytorch==0.5.0 && \
+    mamba run -n notebook python -c "import torch; assert torch.__version__ == '2.10.0+cu129', torch.__version__"
+
 # 5. Compile llama-cpp-python from source
 # CRITICAL FIX: Using 'mamba run' to ensure the environment is activated during the build!
 RUN mamba run -n notebook env CMAKE_ARGS="-DGGML_CUDA=on -DCUDAToolkit_ROOT=/srv/conda/envs/notebook -DCMAKE_CUDA_ARCHITECTURES=75 -DGGML_NATIVE=OFF -DGGML_AVX=ON -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON -DGGML_AVX512=OFF -DGGML_AVX512_VBMI=OFF -DGGML_AVX512_VNNI=OFF" FORCE_CMAKE=1 \
