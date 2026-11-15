@@ -61,11 +61,11 @@ RUN mamba run -n notebook python -m pip install --no-cache-dir --no-deps \
     pycolmap-cuda12==4.2.1
 
 # 8. LAION-fMRI (CMU), same pins as base-user-image #183. The pangeo base
-# already has s3fs, h5py and awscli 2, so pip only adds nibabel and laion-fmri.
-# The check fails the build if pip pulled in awscli 1, which would pin botocore
-# and break s3fs.
-RUN mamba run -n notebook python -m pip install --no-cache-dir \
-    nibabel==5.5.0 \
+# already has s3fs, h5py, numpy, pandas, pillow and awscli 2, so laion-fmri goes
+# in with --no-deps: otherwise pip re-resolves awscli 2's pins and downgrades
+# urllib3 under kubernetes. The check fails the build if awscli is not v2.
+RUN mamba run -n notebook python -m pip install --no-cache-dir nibabel==5.5.0 && \
+    mamba run -n notebook python -m pip install --no-cache-dir --no-deps \
     "laion-fmri @ https://github.com/ViCCo-Group/LAION-fMRI/archive/cf5f97404f654410db75964210cefe5fa04f9d77.zip" && \
     mamba run -n notebook python -c "import laion_fmri, nibabel, s3fs, h5py, importlib.metadata as m; \
 assert m.version('awscli').startswith('2.'), m.version('awscli')" && \
