@@ -70,3 +70,12 @@ RUN mamba run -n notebook python -m pip install --no-cache-dir nibabel==5.5.0 &&
     mamba run -n notebook python -c "import laion_fmri, nibabel, s3fs, h5py, importlib.metadata as m; \
 assert m.version('awscli').startswith('2.'), m.version('awscli')" && \
     mamba run -n notebook python -m awscli --version
+
+# 9. Turn off JupyterLab's "get notified about Jupyter news" prompt and its
+# update check. Merged into any overrides.json the pangeo base already ships.
+RUN mamba run -n notebook python -c "import json, pathlib, sys; \
+p = pathlib.Path(sys.prefix, 'share/jupyter/lab/settings/overrides.json'); \
+d = json.loads(p.read_text()) if p.exists() else {}; \
+d['@jupyterlab/apputils-extension:notification'] = {'fetchNews': 'false', 'checkForUpdates': False}; \
+p.parent.mkdir(parents=True, exist_ok=True); \
+p.write_text(json.dumps(d, indent=1)); print(p, d)"
